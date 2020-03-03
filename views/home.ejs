@@ -1,0 +1,63 @@
+<%- include('partials/header') %>
+
+<div id="active-clients">Active Clients: ? <i class="fas fa-users"></i></div>
+
+<div class="container-fluid">
+    <table id="client-table" class="table table-striped table-dark">
+        <thead>
+            <tr>
+                <th scope="col" class="row-index">#</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="new-client-connected">New client connected!</div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script>
+    const socket = io();
+
+    socket.on("connect", () => {
+        console.log("Connected to server");
+    });
+
+    socket.on("vpnStatusUpdate", status => {
+        $("#active-clients").html(
+            `Active Clients: ${status.clients.length} <i class="fas fa-users"></i>`
+        );
+
+        $("#client-table>thead>tr").empty();
+        $("#client-table>thead>tr").append(
+            `<th scope="col" class="row-index">#</th>`
+        );
+        status.header.forEach(entry => {
+            $("#client-table>thead>tr").append(
+                `<th scope="col" class="row-index">${entry}</th>`
+            );
+        });
+
+        $("#client-table>tbody").empty();
+        status.clients.forEach((client, index) => {
+            $("#client-table>tbody").append(`<tr id=client-row-${index}></tr>`);
+            $(`#client-table>tbody>#client-row-${index}`).append(
+                `<th scope="col" class="row-index">${index + 1}</th>`
+            );
+            client.forEach(entry => {
+                $(`#client-table>tbody>#client-row-${index}`).append(
+                    `<td>${entry}</td>`
+                );
+            });
+        });
+    });
+
+    socket.on("clientConnectionEstablished", () => {
+        console.log("New client connected");
+        $("#new-client-connected").animate({ opacity: 1.0 }, 500, () => {
+            $("#new-client-connected").animate({ opacity: 0 }, 1500);
+        });
+    });
+</script>
+
+<%- include('partials/footer') %>
