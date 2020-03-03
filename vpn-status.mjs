@@ -19,8 +19,15 @@ connection.on("data", data => {
     }
 });
 
+connection.on("error", () => {
+    localEmitter.emit("telnetError");
+});
+
 function getVPNStatus(callback) {
     connection.send("status 1\n", (err, res) => {
+        if (err) {
+            localEmitter.emit("telnetError");
+        }
         callback(err, parseVPNStatus(res));
     });
 }
@@ -42,7 +49,10 @@ function parseVPNStatus(vpnStatus) {
     const clientList = [];
     let index = 3;
 
-    while (!vpnStatusParsed[index].includes("ROUTING TABLE")) {
+    while (
+        !vpnStatusParsed[index].includes("ROUTING TABLE") &&
+        index <= vpnStatusParsed.length
+    ) {
         clientList.push(vpnStatusParsed[index++].split(","));
     }
 

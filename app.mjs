@@ -50,8 +50,10 @@ function updateVPNStatus() {
             console.log("Active clients:\n");
             console.log(status.clients);
             io.emit("vpnStatusUpdate", status);
-        } else {
-            updateVPNStatus();
         }
     });
 }
+
+localEmitter.on("telnetError", () => {
+    io.emit("telnetError");
+});

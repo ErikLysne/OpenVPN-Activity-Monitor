@@ -50,6 +50,11 @@ td {
     text-align: center;
 }
 
+#connection-error {
+    text-align: center;
+    display: none;
+}
+
 #not-found {
     text-align: center;
 }
