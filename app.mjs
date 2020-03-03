@@ -49,6 +49,7 @@ function updateVPNStatus() {
         if (status !== null) {
             console.log("Active clients:\n");
             console.log(status.clients);
+            status.clients[0][0] = "work";
             io.emit("vpnStatusUpdate", status);
         }
     });
