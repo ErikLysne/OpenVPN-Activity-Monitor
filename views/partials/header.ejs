@@ -30,8 +30,16 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="/">Clients <span class="sr-only">(current)</span></a>
-        <a class="nav-item nav-link" href="/">Data</a>
+        <a class="nav-item nav-link <%= active ===  'clients' ? 'active' : ''  %>" href="/clients">Clients </a>
+        <a class="nav-item nav-link <%= active ===  'data' ? 'active' : ''  %>" href="/data">Data</a>
       </div>
     </div>
   </nav>
+
+  <div id="connection-error" class="alert alert-danger" role="alert">
+    The server could not connect to the OpenVPN manager interface. Visit the
+    <a href="https://github.com/ErikLysne/OpenVPN-Activity-Monitor"
+        >GitHub repo</a
+    >
+    for more info.
+</div>

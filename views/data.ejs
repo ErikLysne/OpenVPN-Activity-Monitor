@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+<div id="canvas-container">
+    <canvas id="data-graph"></canvas>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    const ctx = $("#data-graph")[0].getContext("2d");
+    const chart = new Chart(ctx, {
+        type: "line",
+
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    label: "Data Received",
+                    backgroundColor: "rgba(214, 52, 71, 0.9)",
+                    borderColor: "#fcfaf1",
+                    data: []
+                },
+                {
+                    label: "Data Sent",
+                    backgroundColor: "rgba(230, 179, 30, 0.9)",
+                    borderColor: "#fcfaf1",
+                    data: []
+                }
+            ]
+        },
+
+        options: {
+            maintainAspectRatio: false,
+            animation: {
+                easing: "easeOutCirc"
+            }
+        }
+    });
+
+    socket.on("graphDataUpdate", graphData => {
+        chart.data.labels = graphData.timestamp;
+        chart.data.datasets[0].data = graphData.received;
+        chart.data.datasets[1].data = graphData.sent;
+        chart.update();
+        console.log(graphData);
+    });
+</script>
+
+<%- include('partials/footer') %>

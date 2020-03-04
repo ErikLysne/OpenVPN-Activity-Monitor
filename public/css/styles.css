@@ -30,6 +30,10 @@ i {
     margin: auto;
 }
 
+#spinner {
+    margin-bottom: 0.5rem;
+}
+
 #new-client-connected {
     width: 25%;
     position: absolute;
@@ -44,6 +48,13 @@ i {
     border-color: #cacaca;
     padding: 5px 0;
     opacity: 0;
+}
+
+#canvas-container {
+    width: 75vw;
+    height: 50vh;
+    margin: 5% auto;
+    position: relative;
 }
 
 #footer {

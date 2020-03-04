@@ -12,11 +12,27 @@ const app = express();
 const server = http.createServer(app);
 const io = socket.listen(server);
 
+const graphData = {
+    timestamp: [],
+    received: [],
+    sent: []
+};
+
+const graphDataBufferLength = 20;
+
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
+app.get("/clients", (req, res) => {
+    res.render("clients", { active: "clients" });
+});
+
+app.get("/data", (req, res) => {
+    res.render("data", { active: "data" });
+});
+
 app.get("/", (req, res) => {
-    res.render("home");
+    res.redirect("clients");
 });
 
 // Fallback route
@@ -41,15 +57,41 @@ localEmitter.on("clientConnectionEstablished", () => {
 
 // Refresh vpn status periodically
 setInterval(function() {
-    updateVPNStatus();
-}, 10000);
+    updateVPNStatus(status => {
+        graphData.timestamp.push(new Date().toLocaleTimeString());
+        graphData.received.push(
+            status.clients.reduce(
+                (totalDataReceived, client) =>
+                    totalDataReceived + parseInt(client[2]),
+                0
+            )
+        );
+        graphData.sent.push(
+            status.clients.reduce(
+                (totalDataSent, clientData) =>
+                    totalDataSent + parseInt(clientData[3]),
+                0
+            )
+        );
 
-function updateVPNStatus() {
+        if (graphData.timestamp.length > graphDataBufferLength) {
+            graphData.timestamp.shift();
+            graphData.sent.shift();
+            graphData.received.shift();
+        }
+
+        io.emit("graphDataUpdate", graphData);
+    });
+}, 2000);
+
+function updateVPNStatus(callback) {
     vpnStatus.getVPNStatus((err, status) => {
         if (status !== null) {
             console.log("Active clients:\n");
             console.log(status.clients);
+
             io.emit("vpnStatusUpdate", status);
+            typeof callback === "function" && callback(status);
         }
     });
 }
