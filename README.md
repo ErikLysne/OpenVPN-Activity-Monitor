@@ -2,7 +2,7 @@
 
 Simple Node.js program to monitor the activity of OpenVPN clients and render a web interface to see a list of connected clients. Must run on the same machine which hosts the OpenVPN server.
 
-![OpenVPN-Activity-Monitor-Screenshot](https://user-images.githubusercontent.com/17698478/75825650-11095500-5da6-11ea-9a78-b6e3db7e8b94.PNG)
+![OpenVPN-Activity-Monitor-Screenshot_2](https://user-images.githubusercontent.com/17698478/75901878-7a897200-5e3f-11ea-876c-5eb4a5c8ed0a.PNG)
 
 <a name="installation"></a>
 
