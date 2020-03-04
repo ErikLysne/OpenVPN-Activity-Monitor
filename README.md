@@ -10,9 +10,9 @@ Simple Node.js program to monitor the activity of OpenVPN clients and render a w
 
 ### 1. Enable OpenVPN Management Interface
 
-To use this program, the management interface of OpenVPN must be enabled in the `server.conf` file. On my system (Debian 10) this was located in `/etc/openvpn/`, but this may differ on other operating systems.
+To use this program, the OpenVPN Management Interface must be enabled in the `server.conf` file. On my system (Debian 10) this was located in `/etc/openvpn/`, but this may differ on other operating systems.
 
-Append the following to the `server.conf` file:
+Append `management 127.0.0.1 7505` to the `server.conf` file, e.g. by running:
 
 ```
 # Make sure the path to server.conf is correct
@@ -22,19 +22,17 @@ echo 'management 127.0.0.1 7505' | sudo tee /etc/openvpn/server.conf -a
 Then restart the OpenVPN service:
 
 ```
-sudo systemctl stop openvpn@server
-sudo systemctl enable openvpn@server.service
-sudo systemctl start openvpn@server
+sudo systemctl restart openvpn@server.service
 
 ```
 
-You can check that the management interface is working by running
+You can check that the management interface is working by running:
 
 ```
 telnet localhost 7505
 ```
 
-and you should see something like this:
+The output should look something like this:
 
 ```
 Trying ::1...
@@ -45,9 +43,11 @@ Escape character is '^]'.
 
 ```
 
-You can type `help` to get a list of commands. To quit, type `exit`.
+For a list of available commands, type `help`. To quit, type `exit`.
 
 ### 2. Setup Web Interface
+
+**Note:** The Node.JS program is basically just parsing the responses from the OpenVPN Management Interface. It is therefore important that the OpenVPN Management Interface was enabled correctly in the previous step.
 
 Download the latest version of Node.JS (here using _nvm_):
 
