@@ -82,7 +82,7 @@ npm i
 Run the program:
 
 ```
-node app.mjs
+node --experimental-modules app.mjs
 ```
 
 Open a web browser and go to `http://<host ip address>:3000` to launch the web interface.
